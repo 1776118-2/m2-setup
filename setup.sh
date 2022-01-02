@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 # Color variables
 blue='\033[0;34m'
 yellow='\033[1;33m'
