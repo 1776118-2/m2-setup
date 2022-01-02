@@ -1,8 +1,8 @@
 ## Setting up Magento 2 Development Environment (without Docker) in Ubuntu 20.04
 
-* After formatting and installing Ubuntu 20.04, just execute the script with wget
+* After formatting and installing Ubuntu 20.04, download and execute the script
 
-	```wget -O - https://raw.githubusercontent.com/vpjoao98/m2-setup/master/setup.sh | bash```
+	```wget https://raw.githubusercontent.com/vpjoao98/m2-setup/master/setup.sh -O setup.sh && chmod +x setup.sh && ./setup.sh```
 
 * The script will install all that will be need to set up your development environment for Magento 2 in Ubuntu 20.04.
 
