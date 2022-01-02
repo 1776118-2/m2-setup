@@ -1,0 +1,190 @@
+# Functions
+zsh-aliases(){
+    echo ""
+    localhost:help
+    echo ""
+    cat ~/.zsh/.zsh_aliases
+}
+
+# Localhost Functions
+localhost:help(){
+    echo "# Localhost Functions"
+    echo "localhost:set <project-name>                       \t\t Create a new Localhost structure (Directory, Apache2 Configuration and Database) with the <project-name>"
+    echo "localhost:remove <project-name>                    \t\t Remove Localhost structure of given <project-name>"
+    echo "localhost:restore-db <project-name> <db-dump-file> \t\t Restore <db-dump-file> in <project-name> database."
+    echo "localhost:es-setup <project-name>                  \t\t Setup the ElasticSearch configuration for current Magento 2 Project"
+    echo "localhost:env                                      \t\t Create a new env.php file within Magento 2 Project"   
+}
+
+localhost:set(){
+    if [ ! $# -ge 1 ]
+    then
+        echo "A project name is needed to setup a new localhost configuration."
+    else
+        LOCALHOST=$(echo $1 | tr '[:upper:]' '[:lower:]')
+        sudo printf "<VirtualHost *:80> \n\t DocumentRoot /var/www/html/$LOCALHOST \n\t ServerName $LOCALHOST.localhost\n </VirtualHost>" > ~/$LOCALHOST.conf
+        sudo mv ~/$LOCALHOST.conf /etc/apache2/sites-available/.
+        sudo a2ensite $LOCALHOST.conf
+        sudo service apache2 restart
+        mkdir -p /var/www/html/$LOCALHOST
+        sudo mysql -uroot -e "CREATE DATABASE $LOCALHOST"
+        if ! grep -Fq "alias $LOCALHOST" ~/.zsh/.zsh_aliases
+        then
+            echo "alias $LOCALHOST='cd /var/www/html/$LOCALHOST'" >> ~/.zsh/.zsh_aliases
+            . ~/.zshrc
+        fi
+    fi
+}
+
+localhost:remove(){
+    if [ ! $# -ge 1 ]
+    then
+        echo "A project name is needed to remove a localhost configuration."
+    else
+        LOCALHOST=$(echo $1 | tr '[:upper:]' '[:lower:]')
+        sudo a2dissite $LOCALHOST.conf
+        sudo rm /etc/apache2/sites-available/$LOCALHOST.conf
+        sudo service apache2 restart
+        sudo mysql -uroot -e "DROP DATABASE $LOCALHOST"
+        sudo rm -rf /var/www/html/$LOCALHOST
+        grep -v "alias $LOCALHOST='/var/www/html/$LOCALHOST'" ~/.zsh/.zsh_aliases > ~/.zsh_aliases
+        mv -f ~/.zsh_aliases ~/.zsh/.
+    fi
+}
+
+localhost:restore-db(){
+	if [ $# -ge 2 ]
+	then
+	    definer $2
+        LOCALHOST=$(echo $1 | tr '[:upper:]' '[:lower:]')
+	    mysql -uroot $LOCALHOST < $2 -v
+        mysql -uroot -e "UPDATE $LOCALHOST.core_config_data SET value = 'http://$LOCALHOST.localhost/' WHERE path LIKE '%secure/base_url%' AND value like '%$LOCALHOST.com.br%'"
+	else
+	    echo "One or more params is missing! Please try again. Example: restore_db <db-name> <db-dump>"	
+	fi
+}
+
+localhost:es-setup(){
+    if [ ! $# -ge 1 ]
+    then
+        echo "A db-name is needed to set ElasticSearch Configuration."
+    else
+        LOCALHOST=$(echo $1 | tr '[:upper:]' '[:lower:]')
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/elasticsearch7_server_hostname','127.0.0.1') ON DUPLICATE KEY UPDATE value = '127.0.0.1'"
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/elasticsearch7_server_port',9200) ON DUPLICATE KEY UPDATE value = 9200"
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/elasticsearch7_index_prefix','magento2_stg') ON DUPLICATE KEY UPDATE value = 'magento2_stg'"
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/elasticsearch7_enable_auth',0) ON DUPLICATE KEY UPDATE value = 0"
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/elasticsearch7_server_timeout',15) ON DUPLICATE KEY UPDATE value = 15"
+        mysql -uroot -e "INSERT INTO $LOCALHOST.core_config_data(scope,scope_id,path,value) values ('default',0,'catalog/search/engine','elasticsearch7') ON DUPLICATE KEY UPDATE value = 'elasticsearch7'"
+    fi
+}
+
+localhost:env(){
+    if [ ! -d "app/etc/" ] && [ ! -d "vendor/magento" ]
+    then
+        echo "This is not a valid Magento 2 project or its not installed yet. If it is a Magento 2 project, try to run composer install first."
+    else
+	printf "<?php
+return [
+    'backend' => [
+        'frontName' => 'admin'
+    ],
+    'queue' => [
+        'consumers_wait_for_messages' => 1
+    ],
+    'crypt' => [
+        'key' => '504a31041dd9cf1e91e6c43557e56d08'
+    ],
+    'db' => [
+        'table_prefix' => '',
+        'connection' => [
+            'default' => [
+                'host' => 'localhost',
+                'dbname' => '${PWD##*/}',
+                'username' => 'root',
+                'password' => '',
+                'model' => 'mysql4',
+                'engine' => 'innodb',
+                'initStatements' => 'SET NAMES utf8;',
+                'active' => '1',
+                'driver_options' => [
+                    1014 => false
+                ]
+            ]
+        ]
+    ],
+    'resource' => [
+        'default_setup' => [
+            'connection' => 'default'
+        ]
+    ],
+    'x-frame-options' => 'SAMEORIGIN',
+    'MAGE_MODE' => 'developer',
+    'session' => [
+        'save' => 'files'
+    ],
+    'cache' => [
+        'frontend' => [
+            'default' => [
+                'id_prefix' => '50f_'
+            ],
+            'page_cache' => [
+                'id_prefix' => '50f_'
+            ]
+        ],
+        'allow_parallel_generation' => false
+    ],
+    'lock' => [
+        'provider' => 'db',
+        'config' => [
+            'prefix' => ''
+        ]
+    ],
+    'cache_types' => [
+        'config' => 1,
+        'layout' => 1,
+        'block_html' => 1,
+        'collections' => 1,
+        'reflection' => 1,
+        'db_ddl' => 1,
+        'compiled_config' => 1,
+        'eav' => 1,
+        'customer_notification' => 1,
+        'config_integration' => 1,
+        'config_integration_api' => 1,
+        'full_page' => 1,
+        'config_webservice' => 1,
+        'translate' => 1,
+        'vertex' => 1,
+        'amasty_shopby' => 1,
+        'target_rule' => 1,
+        'frenet_api_result' => 1
+    ],
+    'downloadable_domains' => [
+
+    ],
+    'install' => [
+        'date' => 'Tue, 10 Aug 2021 13:12:37 +0000'
+    ],
+    'remote_storage' => [
+        'driver' => 'file'
+    ],
+    'directories' => [
+        'document_root_is_pub' => true
+    ],
+    'system' => [
+        'default' => [
+            'catalog' => [
+                'search' => [
+                    'engine' => 'elasticsearch7',
+                    'elasticsearch7_server_hostname' => '127.0.0.1',
+                    'elasticsearch7_server_port' => '9200',
+                    'elasticsearch7_index_prefix' => 'magento2_stg'
+                ]
+            ]
+        ]
+    ]
+];
+" >> app/etc/env.php
+    fi
+}
