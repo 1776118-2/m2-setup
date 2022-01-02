@@ -25,13 +25,13 @@ spin()
 cd ~
 echo -e "${yellow}Please, type your password to start:${clear}"
 echo $USER 'ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers &> /dev/null
-echo "APT::Get::Assume-Yes "true";" >> 98forceyes &> /dev/null
+echo "APT::Get::Assume-Yes "true";" >> 98forceyes
 sudo mv 98forceyes /etc/apt/apt.conf.d/.
 
 # Initializating Spinner
 spin &
 SPIN_PID=$!
-trap "kill -9 $SPIN_PID" `seq 0 15`
+trap "kill -9 $SPIN_PID"
 
 # Upgrading and Updating
 echo -e "${blue}Checking for updates (It may take a while)...${clear}"
