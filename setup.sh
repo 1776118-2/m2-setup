@@ -54,7 +54,7 @@ echo -e "${blue}Default localhost location set to /var/www/html...${clear}"
 
 # Install PHP
 echo -e "${blue}Adding PHP repository package...${clear}"
-sudo add-apt-repository ppa:ondrej/php &> /dev/null
+sudo add-apt-repository ppa:ondrej/php -y &> /dev/null
 sudo apt-get update &> /dev/null
 echo -e "${blue}Installing PHP 7.4...${clear}"
 sudo apt-get install php7.4 php7.4-{bcmath,bz2,cli,common,curl,dba,dev,enchant,fpm,gd,gmp,imap,interbase,intl,json,ldap,mbstring,mcrypt,mysql,odbc,opcache,pgsql,phpdbg,pspell,readline,snmp,soap,sqlite3,sybase,tidy,xml,xmlrpc,xsl,xdebug,zip} &> /dev/null
@@ -106,7 +106,7 @@ sudo composer self-update --1 &> /dev/null
 
 # Install DBeaver
 echo -e "${blue}Installing DBeaver...${clear}"
-sudo add-apt-repository ppa:serge-rider/dbeaver-ce &> /dev/null
+sudo add-apt-repository ppa:serge-rider/dbeaver-ce -y &> /dev/null
 sudo apt-get update &> /dev/null
 sudo apt-get install dbeaver-ce &> /dev/null
 
