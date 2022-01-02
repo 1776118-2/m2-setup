@@ -31,7 +31,7 @@ sudo mv 98forceyes /etc/apt/apt.conf.d/.
 # Initializating Spinner
 spin &
 SPIN_PID=$!
-trap "kill -9 $SPIN_PID"
+trap "kill -9 $SPIN_PID" `seq 0 15`
 
 # Upgrading and Updating
 echo -e "${blue}Checking for updates (It may take a while)...${clear}"
