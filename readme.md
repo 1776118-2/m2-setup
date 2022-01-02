@@ -2,7 +2,7 @@
 
 * After formatting and installing Ubuntu 20.04, just execute the script with wget
 
-	```wget -O https://raw.githubusercontent.com/vpjoao98/m2-setup/master/setup.sh | bash```
+	```wget -O - https://raw.githubusercontent.com/vpjoao98/m2-setup/master/setup.sh | bash```
 
 * The script will install all that will be need to set up your development environment for Magento 2 in Ubuntu 20.04.
 
