@@ -163,8 +163,8 @@ chsh -s $(which zsh)
 
 # Install Oh-my-zsh spaceship theme
 echo -e "${blue}Installing Oh-my-zsh spaceship theme...${clear}"
-git clone https://github.com/spaceship-prompt/spaceship-prompt.git "~/.oh-my-zsh/custom/themes/spaceship-prompt" --depth=1 &> /dev/null
-ln -s "~/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme" "~/.oh-my-zsh/custom/themes/spaceship.zsh-theme" &> /dev/null
+git clone https://github.com/spaceship-prompt/spaceship-prompt.git ~/.oh-my-zsh/custom/themes/spaceship-prompt --depth=1 &> /dev/null
+ln -s ~/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme &> /dev/null
 
 # Adding Zsh aliases and functions
 echo -e "${blue}Adding zsh aliases and functions...${clear}"
