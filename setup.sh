@@ -124,8 +124,6 @@ sudo snap install code --classic &> /dev/null
 
 # Install Orchis-theme
 echo -e "${blue}Installing Orchis Theme...${clear}"
-sudo apt-get install libsass0 &> /dev/null
-sudo apt-get install sassc &> /dev/null
 mkdir -p ~/Themes/Orchis
 git clone https://github.com/vinceliuice/Orchis-theme.git ~/Themes/Orchis &> /dev/null
 ~/Themes/Orchis/install.sh -t grey &> /dev/null
