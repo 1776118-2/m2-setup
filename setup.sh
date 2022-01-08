@@ -84,6 +84,8 @@ curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list &> /dev/null
 sudo apt-get update &> /dev/null
 sudo apt-get install elasticsearch &> /dev/null
+echo "-Xms1g\n-Xmx1g" > ~/memory.options
+sudo mv ~/memory.options /etc/elasticsearch/jvm.options.d/.
 sudo systemctl daemon-reload &> /dev/null
 sudo systemctl enable elasticsearch.service &> /dev/null
 sudo systemctl start elasticsearch.service &> /dev/null
