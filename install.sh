@@ -6,6 +6,8 @@ blue='\033[0;34m'
 yellow='\033[1;33m'
 clear='\033[0m'
 
+install
+
 # Installation
 install(){
     echo -e "${yellow}What type of installation do you want to do?${clear}"
