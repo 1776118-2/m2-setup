@@ -4,6 +4,7 @@ set -e
 # Color variables
 blue='\033[0;34m'
 yellow='\033[1;33m'
+green='\033[0;32m'
 clear='\033[0m'
 
 # Installation options
@@ -156,34 +157,34 @@ prerequisites(){
     sudo apt-get update &> /dev/null
 }
 
-
 # Apache 2
 installapache(){
     echo -e "${blue}Installing Apache 2...${clear}"
     sudo apt-get install apache2 &> /dev/null
+
     echo -e "${blue}Configuring Apache 2...${clear}"
     sudo wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/apache2.conf' -O /etc/apache2/apache2.conf &> /dev/null
     sudo sed -i 's/www-data/'$USER'/g' /etc/apache2/envvars
     sudo a2enmod rewrite &> /dev/null
     sudo service apache2 restart &> /dev/null
     sudo chown -R $USER:$USER /var/www/html/
-    echo -e "${yellow}Default projects directory is /var/www/html/. Do you want to set a symlink with a different path? (Y|Y for Yes)${clear}"
+
+    echo -e "${yellow}Default Apache2 directory is /var/www/html/ Do you want to set a symlink with a different path? (Y|Y for Yes)${clear}"
     read location
     case "$location" in
         Y|y)
+            echo -e "${yellow}Type the path to symlink${clear}"
             read path
-            if [ -d "$path" ]; then
-                sudo mkdir -p "$path"
-                sudo chown -R $USER:$USER "$path"
-                sudo ln -s "$path" /var/www/html/
-            fi
+            sudo mkdir -p "$path"
+            sudo chown -R $USER:$USER "$path"
+            sudo ln -s "$path" /var/www/html/
         ;;
         *|"")
             echo -e "${blue}Skipping custom directory symlink...${clear}"
         ;;
     esac
-    echo -e "${blue}Access http://localhost/ to check if Apache 2 was correctly set.${clear}"
-    echo -e "${yellow}Apache 2 Installation finished.${clear}"
+
+    echo -e "${yellow}Apache 2 Installation finished. Access http://localhost/ to check if Apache 2 was correctly set.${clear}"
 }
 
 # PHP
@@ -202,14 +203,14 @@ installphp(){
     sudo apt-get install libapache2-mod-php7.3 &> /dev/null
     sudo a2enmod php7.3 &> /dev/null
 
-    echo -e "${yellow}To switch between PHP versions, just type ${blue}sudo update-alternatives --config php${clear}"
-    echo -e "${yellow}PHP Installation finished.${clear}"
+    echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${blue}sudo update-alternatives --config php${clear}"
 }
 
 # MySQL
 installmysql(){
     echo -e "${blue}Installing MySQL...${clear}"
     sudo apt install mysql-server &> /dev/null
+
     echo -e "${blue}Configuring MySQL...${clear}"
     sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
     sudo mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
@@ -217,8 +218,8 @@ installmysql(){
     sudo mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
     sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
     sudo mysql -e "FLUSH PRIVILEGES"
-    echo -e "${yellow}MySQL password for user root set as ${blue}root${clear}"
-    echo -e "${yellow}MySQL installation finished.${clear}"
+
+    echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${blue}root${clear}"
 }
 
 # Elasticsearch
@@ -369,6 +370,8 @@ finishing(){
     sudo service mysql restart &> /dev/null
     echo -e "${yellow}Setup ended.${clear}"
 }
+
+trap "finishing" ERR
 
 echo -e "${yellow}What type of installation do you want to do?${clear}"
 options
