@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Color variables
 blue='\033[0;34m'
@@ -24,7 +23,6 @@ chromeInstalled=$yellow
 
 # Installation options
 initialization(){
-    trap "clean_up" ERR
     echo -e "${blue}Greetings! \n\nThe purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \n\nI hope this will help you to save some hours of work! \n\n${yellow}When ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
     read answer
     case "$answer" in
@@ -170,6 +168,7 @@ install_apache(){
     esac
 
     echo -e "${yellow}Apache 2 Installation finished. Access ${green}http://localhost/${yellow} to check if Apache 2 was correctly set.${clear}"
+    apacheInstalled=$green
 }
 
 # PHP
@@ -189,6 +188,7 @@ install_php(){
     sudo a2enmod php7.3 &> /dev/null
 
     echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${green}sudo update-alternatives --config php${yellow}.${clear}"
+    phpInstalled=$green
 }
 
 # MySQL
@@ -203,6 +203,7 @@ install_mysql(){
     sudo mysql -e "FLUSH PRIVILEGES"
 
     echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${green}''${yellow}.${clear}"
+    mysqlInstalled=$green
 }
 
 # Elasticsearch
@@ -218,6 +219,7 @@ install_elasticsearch(){
     sudo systemctl enable elasticsearch.service &> /dev/null
     sudo systemctl start elasticsearch.service &> /dev/null
     echo -e "${yellow}Elasticsearch installation finished.${clear}"
+    esInstalled=$green
 }
 
 # NodeJS
@@ -228,6 +230,7 @@ install_node(){
     sudo apt-get install nodejs &> /dev/null
     sudo npm install -g grunt-cli &> /dev/null
     echo -e "${yellow}NodeJS and Grunt installation finished.${clear}"
+    nodeInstalled=$green
 }
 
 # Composer
@@ -240,6 +243,7 @@ install_composer(){
     sudo mv composer.phar /usr/local/bin/composer &> /dev/null
     sudo composer self-update --1 &> /dev/null
     echo -e "${yellow}Composer installation finished.${clear}"
+    composerInstalled=$green
 }
 
 # Dbeaver
@@ -249,6 +253,7 @@ install_dbeaver(){
     sudo apt-get update &> /dev/null
     sudo apt-get install dbeaver-ce &> /dev/null
     echo -e "${yellow}Dbeaver installation finished.${clear}"
+    dbeaverInstalled=$green
 }
 
 # Insomnia
@@ -256,6 +261,7 @@ install_insomnia(){
     echo -e "${blue}Installing Insomnia...${clear}"
     sudo snap install insomnia --classic &> /dev/null
     echo -e "${yellow}Insomnia installation finished.${clear}"
+    insomniaInstalled=$green
 }
 
 # PHPStorm
@@ -263,6 +269,7 @@ install_phpstorm(){
     echo -e "${blue}Installing PHPStorm...${clear}"
     sudo snap install phpstorm --classic &> /dev/null
     echo -e "${yellow}PHPStorm installation finished.${clear}"
+    phpstormInstalled=$green
 }
 
 # VSCode
@@ -270,6 +277,7 @@ install_vscode(){
     echo -e "${blue}Installing VSCode...${clear}"
     sudo snap install code --classic &> /dev/null
     echo -e "${yellow}VSCode installation finished.${clear}"
+    vscodeInstalled=$green
 }
 
 # Theme
@@ -298,6 +306,7 @@ install_theme(){
     gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 30
 
     echo -e "${yellow}Theme installation finished.${clear}"
+    themeInstalled=$green
 }
 
 # Oh-my-zsh
@@ -323,6 +332,7 @@ install_zsh(){
     wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/.zsh_functions' -O ~/.zsh/.zsh_functions &> /dev/null
     wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/.zshrc' -O ~/.zshrc &> /dev/null
     echo -e "${yellow}Zsh + Oh-my+Zsh installation finished. To show all zsh aliases and functions, just type ${green}zsh-aliases${clear}."
+    zshInstalled=$green
 }
 
 # Magento-Cloud
@@ -330,6 +340,7 @@ install_magentocloud(){
     echo -e "${blue}Installing Magento-Cloud...${clear}"
     curl -sS https://accounts.magento.cloud/cli/installer | php &> /dev/null
     echo -e "${yellow}Magento-Cloud installation finished. Type mgc or magento-cloud to open the CLI${clear}"
+    magentoCloudInstalled=$green
 }
 
 # Chrome
@@ -339,6 +350,7 @@ install_chrome(){
     sudo apt-get install ~/Downloads/chrome.deb &> /dev/null
     rm ~/Downloads/chrome.deb
     echo -e "${yellow}Google Chrome installation finished.${clear}"
+    chromeInstalled=$green
 }
 
 # Clean up
