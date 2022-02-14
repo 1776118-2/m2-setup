@@ -40,7 +40,11 @@ initialization(){
 # Permissions
 set_permissions(){
     echo -e "${yellow}Please, type your password to start:${clear}"
-    echo $USER 'ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers &> /dev/null
+    if sudo grep -Fxq "$USER ALL=(ALL) NOPASSWD:ALL" "/etc/sudoers" &> /dev/null
+    then
+    else
+        echo $USER 'ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
+    fi
     echo "APT::Get::Assume-Yes "true";" >> 98forceyes
     sudo mv 98forceyes /etc/apt/apt.conf.d/.
 }
