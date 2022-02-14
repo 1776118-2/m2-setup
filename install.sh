@@ -25,7 +25,7 @@ chromeInstalled=yellow
 # Installation options
 initialization(){
     trap "clean_up" ERR
-    echo -e "${blue}# Greetings! \n# The purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \n # I hope this will help you to save some hours of work!. \n When ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
+    echo -e "${blue}Greetings! \nThe purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \nI hope this will help you to save some hours of work!. \nWhen ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
     read answer
     case "$answer" in
         1)
