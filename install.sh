@@ -8,7 +8,7 @@ clear='\033[0m'
 
 # Installation options
 options(){
-    echo -e "${blue}(1) Simple (Install all applications) \n (2) Advanced (Select specific applications to install) \n (3) Exit${clear}"
+    echo -e "${blue}(1) Simple (Install all applications)\n(2) Advanced (Select specific applications to install)\n(3) Exit${clear}"
     read answer
     case "$answer" in
         1)
