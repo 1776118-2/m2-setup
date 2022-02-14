@@ -7,143 +7,40 @@ yellow='\033[1;33m'
 green='\033[0;32m'
 clear='\033[0m'
 
+apacheInstalled=yellow
+phpInstalled=yellow
+mysqlInstalled=yellow
+esInstalled=yellow
+nodeInstalled=yellow
+composerInstalled=yellow
+dbeaverInstalled=yellow
+insomniaInstalled=yellow
+phpstormInstalled=yellow
+vscodeInstalled=yellow
+themeInstalled=yellow
+zshInstalled=yellow
+magentoCloudInstalled=yellow
+chromeInstalled=yellow
+
 # Installation options
-options(){
-    echo -e "${blue}(1) Simple (Install all applications)\n(2) Advanced (Select specific applications to install)\n(3) Exit${clear}"
+initialization(){
+    trap "clean_up" ERR
+    echo -e "${blue}# Greetings! \n# The purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \n # I hope this will help you to save some hours of work!. \n When ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
     read answer
     case "$answer" in
         1)
-            permissions
-            prerequisites
-            simple
+            set_permissions
+            check_prerequisites
+            installation_options
         ;;
-        2)
-            permissions
-            prerequisites
-            advanced
-        ;;
-        3)
+        *|"")
             echo -e "${yellow}Setup ended.${clear}"
-        ;;
-        *|"")
-            echo -e "${yellow}Invalid option.${clear}"
-            options
-        ;;
-    esac
-}
-
-# Simple installation
-simple(){
-    installapache
-    installphp
-    installmysql
-    installelasticsearch
-    installnode
-    installcomposer
-    installdbeaver
-    installinsomnia
-    installphpstorm
-    installvscode
-    installtheme
-    installzsh
-    installmagentocloud
-    installchrome
-    finishing
-}
-
-# Advanced installation
-advanced(){
-    echo -e "${yellow}What do you want to install?
-    (0) All    
-    (1) Apache 2
-    (2) PHP 7.3 and 7.4
-    (3) MySQL
-    (4) ElasticSearch
-    (5) NodeJS and Grunt
-    (6) Composer
-    (7) DBeaver
-    (8) Insomnia
-    (9) PHPStorm
-    (10) VSCode
-    (11) Theme
-    (12) ZSH and Oh-My+Zsh
-    (13) Magento-Cloud
-    (14) Google Chrome
-    (15) Exit${clear}"
-    read answer
-    case "$answer" in
-        0)
-            simple
-        ;;
-        1)
-            installapache
-            advanced
-        ;;
-        2)
-            installphp
-            advanced
-        ;;
-        3)
-            installmysql
-            advanced
-        ;;
-        4)
-            installelasticsearch
-            advanced
-        ;;
-        5)
-            installnode
-            advanced
-        ;;
-        6)
-            installcomposer
-            advanced
-        ;;
-        7)
-            installdbeaver
-            advanced
-        ;;
-        8)
-            installinsomnia
-            advanced
-        ;;
-        9)
-            installphpstorm
-            advanced
-        ;;
-        10)
-            installvscode
-            advanced
-        ;;
-        11)
-            installtheme
-            advanced
-        ;;
-        12)
-            installzsh
-            advanced
-        ;;
-        13)
-            installmagentocloud
-            advanced
-        ;;
-        14)
-            installchrome
-            advanced
-        ;;
-        15)
-            finishing
-            echo -e "${yellow}Finishing Installation.${clear}"
-        ;;
-        *|"")
-            echo -e "${yellow}Invalid option.${clear}"
-            advanced
         ;;
     esac
 }
 
 # Permissions
-permissions(){
+set_permissions(){
     echo -e "${yellow}Please, type your password to start:${clear}"
     echo $USER 'ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers &> /dev/null
     echo "APT::Get::Assume-Yes "true";" >> 98forceyes
@@ -151,18 +48,110 @@ permissions(){
 }
 
 # Prerequisites
-prerequisites(){
-    echo -e "${blue}Installing basic dependencies...${clear}"
+check_prerequisites(){
+    echo -e "${blue}Checking basic dependencies...${clear}"
     sudo apt-get install curl git wget zip software-properties-common openjdk-8-jdk apt-transport-https &> /dev/null
     sudo apt-get update &> /dev/null
 }
 
+# Installation Options
+installation_options(){
+    echo -e "${yellow}What do you want to install? \n(0) All \n${apacheInstalled}(1)Apache 2 \n${phpInstalled}(2) PHP 7.3 and 7.4 \n${mysqlInstalled}(3) MySQL \n${esInstalled}(4) ElasticSearch \n${nodeInstalled}(5) NodeJS and Grunt \n${composerInstalled}(6) Composer \n${dbeaverInstalled}(7) DBeaver \n${insomniaInstalled}(8) Insomnia \n${phpstormInstalled}(9) PHPStorm \n${vscodeInstalled}(10) VSCode \n${themeInstalled}(11) Theme \n${zshInstalled}(12) ZSH and Oh-My+Zsh \n${magentoCloudInstalled}(13) Magento-Cloud \n${chromeInstalled}(14) Google Chrome \n${yellow}(15) Exit${clear}"
+    read answer
+    case "$answer" in
+        0)
+            install_all
+        ;;
+        1)
+            install_apache
+            installation_options
+        ;;
+        2)
+            install_php
+            installation_options
+        ;;
+        3)
+            install_mysql
+            installation_options
+        ;;
+        4)
+            install_elasticsearch
+            installation_options
+        ;;
+        5)
+            install_node
+            installation_options
+        ;;
+        6)
+            install_composer
+            installation_options
+        ;;
+        7)
+            install_dbeaver
+            installation_options
+        ;;
+        8)
+            install_insomnia
+            installation_options
+        ;;
+        9)
+            install_phpstorm
+            installation_options
+        ;;
+        10)
+            install_vscode
+            installation_options
+        ;;
+        11)
+            install_theme
+            installation_options
+        ;;
+        12)
+            install_zsh
+            installation_options
+        ;;
+        13)
+            install_magentocloud
+            installation_options
+        ;;
+        14)
+            install_chrome
+            installation_options
+        ;;
+        15)
+            clean_up
+            echo -e "${yellow}Setup ended.${clear}"
+        ;;
+        *|"")
+            echo -e "${yellow}Invalid option.${clear}"
+            installation_options
+        ;;
+    esac
+}
+
+# Install all softwares
+install_all(){
+    install_apache
+    install_php
+    install_mysql
+    install_elasticsearch
+    install_node
+    install_composer
+    install_dbeaver
+    install_insomnia
+    install_phpstorm
+    install_vscode
+    install_theme
+    install_zsh
+    install_magentocloud
+    install_chrome
+    clean_up
+}
+
 # Apache 2
-installapache(){
+install_apache(){
     echo -e "${blue}Installing Apache 2...${clear}"
     sudo apt-get install apache2 &> /dev/null
-
-    echo -e "${blue}Configuring Apache 2...${clear}"
     sudo wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/apache2.conf' -O /etc/apache2/apache2.conf &> /dev/null
     sudo sed -i 's/www-data/'$USER'/g' /etc/apache2/envvars
     sudo a2enmod rewrite &> /dev/null
@@ -179,16 +168,13 @@ installapache(){
             sudo chown -R $USER:$USER "$path"
             sudo ln -s "$path" /var/www/html/
         ;;
-        *|"")
-            echo -e "${blue}Skipping custom directory symlink...${clear}"
-        ;;
     esac
 
     echo -e "${yellow}Apache 2 Installation finished. Access ${green}http://localhost/${yellow} to check if Apache 2 was correctly set.${clear}"
 }
 
 # PHP
-installphp(){
+install_php(){
     echo -e "${blue}Adding PHP repository package...${clear}"
     sudo add-apt-repository ppa:ondrej/php -y &> /dev/null
     sudo apt-get update &> /dev/null
@@ -203,15 +189,13 @@ installphp(){
     sudo apt-get install libapache2-mod-php7.3 &> /dev/null
     sudo a2enmod php7.3 &> /dev/null
 
-    echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${green}sudo update-alternatives --config php${clear}"
+    echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${green}sudo update-alternatives --config php${yellow}.${clear}"
 }
 
 # MySQL
-installmysql(){
+install_mysql(){
     echo -e "${blue}Installing MySQL...${clear}"
     sudo apt install mysql-server &> /dev/null
-
-    echo -e "${blue}Configuring MySQL...${clear}"
     sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
     sudo mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
     sudo mysql -e "DROP DATABASE IF EXISTS test;"
@@ -219,18 +203,17 @@ installmysql(){
     sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
     sudo mysql -e "FLUSH PRIVILEGES"
 
-    echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${green}''${clear}"
+    echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${green}''${yellow}.${clear}"
 }
 
 # Elasticsearch
-installelasticsearch(){
+install_elasticsearch(){
     echo -e "${blue}Installing ElasticSearch...${clear}"
     curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - &> /dev/null
     echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list &> /dev/null
     sudo apt-get update &> /dev/null
     sudo apt-get install elasticsearch &> /dev/null
-    echo -e "${blue}Configuring Elasticsearch...${clear}"
-    echo -n "-Xms1g\n-Xmx1g" > ~/jvm.options
+    echo -n "-Xms1g \n-Xmx1g" > ~/jvm.options
     sudo mv ~/jvm.options /etc/elasticsearch/jvm.options.d/.
     sudo systemctl daemon-reload &> /dev/null
     sudo systemctl enable elasticsearch.service &> /dev/null
@@ -239,7 +222,7 @@ installelasticsearch(){
 }
 
 # NodeJS
-installnode(){
+install_node(){
     echo -e "${blue}Installing NodeJS and Grunt${clear}"
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - &> /dev/null
     sudo apt-get update &> /dev/null
@@ -249,7 +232,7 @@ installnode(){
 }
 
 # Composer
-installcomposer(){
+install_composer(){
     echo -e "${blue}Installing Composer...${clear}"
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &> /dev/null
     php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" &> /dev/null
@@ -261,7 +244,7 @@ installcomposer(){
 }
 
 # Dbeaver
-installdbeaver(){
+install_dbeaver(){
     echo -e "${blue}Installing DBeaver...${clear}"
     sudo add-apt-repository ppa:serge-rider/dbeaver-ce -y &> /dev/null
     sudo apt-get update &> /dev/null
@@ -270,28 +253,28 @@ installdbeaver(){
 }
 
 # Insomnia
-installinsomnia(){
+install_insomnia(){
     echo -e "${blue}Installing Insomnia...${clear}"
     sudo snap install insomnia --classic &> /dev/null
     echo -e "${yellow}Insomnia installation finished.${clear}"
 }
 
 # PHPStorm
-installphpstorm(){
+install_phpstorm(){
     echo -e "${blue}Installing PHPStorm...${clear}"
     sudo snap install phpstorm --classic &> /dev/null
     echo -e "${yellow}PHPStorm installation finished.${clear}"
 }
 
 # VSCode
-installvscode(){
+install_vscode(){
     echo -e "${blue}Installing VSCode...${clear}"
     sudo snap install code --classic &> /dev/null
     echo -e "${yellow}VSCode installation finished.${clear}"
 }
 
 # Theme
-installtheme(){
+install_theme(){
     echo -e "${blue}Installing Orchis Theme...${clear}"
     mkdir -p ~/Themes/Orchis
     git clone https://github.com/vinceliuice/Orchis-theme.git ~/Themes/Orchis &> /dev/null
@@ -299,7 +282,7 @@ installtheme(){
 
     echo -e "${blue}Installing Tela Icons Pack...${clear}"
     mkdir -p ~/Themes/Tela
-    git clone https://github.com/vinceliuice/Tela-icon-theme Themes/Tela &> /dev/null
+    git clone https://github.com/vinceliuice/Tela-icon-theme ~/Themes/Tela &> /dev/null
     ~/Themes/Tela/install.sh -a &> /dev/null
 
     echo -e "${blue}Configuring Theme...${clear}"
@@ -319,7 +302,7 @@ installtheme(){
 }
 
 # Oh-my-zsh
-installzsh(){
+install_zsh(){
     echo -e "${blue}Installing Zsh...${clear}"
     sudo apt install zsh &> /dev/null
 
@@ -344,14 +327,14 @@ installzsh(){
 }
 
 # Magento-Cloud
-installmagentocloud(){
+install_magentocloud(){
     echo -e "${blue}Installing Magento-Cloud...${clear}"
     curl -sS https://accounts.magento.cloud/cli/installer | php &> /dev/null
     echo -e "${yellow}Magento-Cloud installation finished. Type mgc or magento-cloud to open the CLI${clear}"
 }
 
 # Chrome
-installchrome(){
+install_chrome(){
     echo -e "${blue}Installing Google Chrome...${clear}"
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O ~/Downloads/chrome.deb &> /dev/null
     sudo apt-get install ~/Downloads/chrome.deb &> /dev/null
@@ -359,8 +342,8 @@ installchrome(){
     echo -e "${yellow}Google Chrome installation finished.${clear}"
 }
 
-# Finishing
-finishing(){
+# Clean up
+clean_up(){
     echo -e "${blue}Cleaning up...${clear}"
     sudo rm /etc/apt/apt.conf.d/98forceyes
     sudo sed -i 's/auth       sufficient       pam_shells.so/auth       required       pam_shells.so/g' /etc/pam.d/chsh
@@ -369,8 +352,6 @@ finishing(){
     sudo service mysql restart &> /dev/null
     echo -e "${yellow}Setup ended.${clear}"
 }
-
-trap "finishing" ERR
 
 echo -e "${yellow}What type of installation do you want to do?${clear}"
 options
