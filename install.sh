@@ -353,5 +353,4 @@ clean_up(){
     echo -e "${yellow}Setup ended.${clear}"
 }
 
-echo -e "${yellow}What type of installation do you want to do?${clear}"
-options
+initialization
