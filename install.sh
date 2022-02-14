@@ -169,7 +169,7 @@ installapache(){
     sudo service apache2 restart &> /dev/null
     sudo chown -R $USER:$USER /var/www/html/
 
-    echo -e "${yellow}Default Apache2 directory is /var/www/html/ Do you want to set a symlink with a different path? (Y|Y for Yes)${clear}"
+    echo -e "${yellow}Default Apache2 directory is ${green}/var/www/html/${yellow} Do you want to set a symlink with a different path? ${green}(Y|Y for Yes)${clear}"
     read location
     case "$location" in
         Y|y)
@@ -184,7 +184,7 @@ installapache(){
         ;;
     esac
 
-    echo -e "${yellow}Apache 2 Installation finished. Access http://localhost/ to check if Apache 2 was correctly set.${clear}"
+    echo -e "${yellow}Apache 2 Installation finished. Access ${green}http://localhost/${yellow} to check if Apache 2 was correctly set.${clear}"
 }
 
 # PHP
@@ -203,7 +203,7 @@ installphp(){
     sudo apt-get install libapache2-mod-php7.3 &> /dev/null
     sudo a2enmod php7.3 &> /dev/null
 
-    echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${blue}sudo update-alternatives --config php${clear}"
+    echo -e "${yellow}PHP Installation finished. To switch between PHP versions, just type ${green}sudo update-alternatives --config php${clear}"
 }
 
 # MySQL
@@ -216,10 +216,10 @@ installmysql(){
     sudo mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
     sudo mysql -e "DROP DATABASE IF EXISTS test;"
     sudo mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
-    sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+    sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
     sudo mysql -e "FLUSH PRIVILEGES"
 
-    echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${blue}root${clear}"
+    echo -e "${yellow}MySQL installation finished. MySQL password for user root set as ${green}''${clear}"
 }
 
 # Elasticsearch
@@ -340,8 +340,7 @@ installzsh(){
     wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/.zsh_aliases' -O ~/.zsh/.zsh_aliases &> /dev/null
     wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/.zsh_functions' -O ~/.zsh/.zsh_functions &> /dev/null
     wget --no-check-certificate 'https://raw.githubusercontent.com/vpjoao98/m2-setup/master/src/.zshrc' -O ~/.zshrc &> /dev/null
-    echo -e "${yellow}To show all zsh aliases and functions, just type ${blue}zsh-aliases${clear}."
-    echo -e "${yellow}Zsh + Oh-my+Zsh installation finished.${clear}"
+    echo -e "${yellow}Zsh + Oh-my+Zsh installation finished. To show all zsh aliases and functions, just type ${green}zsh-aliases${clear}."
 }
 
 # Magento-Cloud
