@@ -7,25 +7,25 @@ yellow='\033[1;33m'
 green='\033[0;32m'
 clear='\033[0m'
 
-apacheInstalled=yellow
-phpInstalled=yellow
-mysqlInstalled=yellow
-esInstalled=yellow
-nodeInstalled=yellow
-composerInstalled=yellow
-dbeaverInstalled=yellow
-insomniaInstalled=yellow
-phpstormInstalled=yellow
-vscodeInstalled=yellow
-themeInstalled=yellow
-zshInstalled=yellow
-magentoCloudInstalled=yellow
-chromeInstalled=yellow
+apacheInstalled=$yellow
+phpInstalled=$yellow
+mysqlInstalled=$yellow
+esInstalled=$yellow
+nodeInstalled=$yellow
+composerInstalled=$yellow
+dbeaverInstalled=$yellow
+insomniaInstalled=$yellow
+phpstormInstalled=$yellow
+vscodeInstalled=$yellow
+themeInstalled=$yellow
+zshInstalled=$yellow
+magentoCloudInstalled=$yellow
+chromeInstalled=$yellow
 
 # Installation options
 initialization(){
     trap "clean_up" ERR
-    echo -e "${blue}Greetings! \nThe purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \nI hope this will help you to save some hours of work!. \nWhen ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
+    echo -e "${blue}Greetings! \n\nThe purpose of this script is to quickly setup a ${green} Magento 2 / Adobe Commerce ${blue} development environment. \n\nI hope this will help you to save some hours of work!. \n\n${yellow}When ready to start, just press 1 to continue or, if you want to leave the setup, press any other key.${clear}"
     read answer
     case "$answer" in
         1)
