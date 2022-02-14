@@ -120,7 +120,6 @@ installation_options(){
         ;;
         15)
             clean_up
-            echo -e "${yellow}Setup ended.${clear}"
         ;;
         *|"")
             echo -e "${yellow}Invalid option.${clear}"
