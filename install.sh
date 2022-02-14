@@ -56,7 +56,7 @@ check_prerequisites(){
 
 # Installation Options
 installation_options(){
-    echo -e "${yellow}What do you want to install? \n(0) All \n${apacheInstalled}(1)Apache 2 \n${phpInstalled}(2) PHP 7.3 and 7.4 \n${mysqlInstalled}(3) MySQL \n${esInstalled}(4) ElasticSearch \n${nodeInstalled}(5) NodeJS and Grunt \n${composerInstalled}(6) Composer \n${dbeaverInstalled}(7) DBeaver \n${insomniaInstalled}(8) Insomnia \n${phpstormInstalled}(9) PHPStorm \n${vscodeInstalled}(10) VSCode \n${themeInstalled}(11) Theme \n${zshInstalled}(12) ZSH and Oh-My+Zsh \n${magentoCloudInstalled}(13) Magento-Cloud \n${chromeInstalled}(14) Google Chrome \n${yellow}(15) Exit${clear}"
+    echo -e "${yellow}What do you want to install? \n(0) All \n${apacheInstalled}(1) Apache 2 \n${phpInstalled}(2) PHP 7.3 and 7.4 \n${mysqlInstalled}(3) MySQL \n${esInstalled}(4) ElasticSearch \n${nodeInstalled}(5) NodeJS and Grunt \n${composerInstalled}(6) Composer \n${dbeaverInstalled}(7) DBeaver \n${insomniaInstalled}(8) Insomnia \n${phpstormInstalled}(9) PHPStorm \n${vscodeInstalled}(10) VSCode \n${themeInstalled}(11) Theme \n${zshInstalled}(12) ZSH and Oh-My+Zsh \n${magentoCloudInstalled}(13) Magento-Cloud \n${chromeInstalled}(14) Google Chrome \n${yellow}(15) Exit${clear}"
     read answer
     case "$answer" in
         0)
