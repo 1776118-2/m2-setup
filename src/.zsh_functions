@@ -13,7 +13,8 @@ localhost:help(){
     echo "localhost:remove <project-name>                    \t\t Remove Localhost structure of given <project-name>"
     echo "localhost:restore-db <project-name> <db-dump-file> \t\t Restore <db-dump-file> in <project-name> database."
     echo "localhost:es-setup <project-name>                  \t\t Setup the ElasticSearch configuration for current Magento 2 Project"
-    echo "localhost:env                                      \t\t Create a new env.php file within Magento 2 Project"   
+    echo "localhost:env                                      \t\t Create a new env.php file within Magento 2 Project"  
+    echo "localhost:setup-grunt                              \t\t Create grunt configuration" 
 }
 
 localhost:set(){
@@ -84,6 +85,7 @@ localhost:env(){
     then
         echo "This is not a valid Magento 2 project or its not installed yet. If it is a Magento 2 project, try to run composer install first."
     else
+    rm app/etc/env.php
 	printf "<?php
 return [
     'backend' => [
@@ -188,3 +190,97 @@ return [
 " >> app/etc/env.php
     fi
 }
+
+localhost:setup-grunt() {
+	if [[ -d vendor/magento/ ]] && [[ -d app/design/frontend/ ]]
+	then
+        # Adding package.json
+        if [[ -f package.json ]]
+        then
+            echo -e "Looks like package.json already exist. Do you want to override it? (y|Y for Yes, any other key to No)"
+            read key
+                if [[ "$key" =~ ^([yY])$ ]]
+                then
+                    echo "Overriding package.json"
+                    cp package.json.sample package.json
+                fi
+        elif [[ ! -f package.json ]]
+        then
+            echo "Adding package.json"
+			cp package.json.sample package.json
+        fi
+
+        # Adding Gruntfile.js
+        if [[ -f Gruntfile.js ]]
+        then
+            echo -e "Looks like Gruntfile.js already exist. Do you want to override it? (y|Y for Yes, any other key to No)"
+            read key
+                if [[ "$key" =~ ^([yY])$ ]]
+                then
+                    echo "Overriding Gruntfile.js"
+                    cp Gruntfile.js.sample Gruntfile.js
+                fi
+        elif [[ ! -f Gruntfile.js ]]
+        then
+            echo "Adding Gruntfile.js"
+			cp Gruntfile.js.sample Gruntfile.js
+        fi
+
+        # Adding grunt-config.json
+        if [[ -f grunt-config.json ]]
+        then
+            echo -e "Looks like grunt-config.json already exist. Do you want to override it? (y|Y for Yes, any other key to No)"
+            read key
+                if [[ "$key" =~ ^([yY])$ ]]
+                then
+                    echo "Overriding grunt-config.json"
+                    cp grunt-config.json.sample grunt-config.json
+                    sed -i 's/local-themes/themes/' grunt-config.json
+                fi
+        elif [[ ! -f grunt-config.json ]]
+        then
+            echo "Adding grunt-config.json"
+            cp grunt-config.json.sample grunt-config.json
+            sed -i 's/local-themes/themes/' grunt-config.json
+        fi
+
+        # Installing NPM
+        echo "Installing NPM"
+        npm install &> /dev/null
+
+        # Installing Grunt and Grunt-Cli
+        echo "Installing Grunt and Grunt-Cli"
+        npm install grunt grunt-cli &> /dev/null
+
+        # Setting up themes configurations
+        for i in app/design/frontend/*
+        do
+            if [ "$i" != "app/design/frontend/Magento" ]; then
+                for j in $i/*
+                do
+                    vendor=${i##*/}
+                    theme=${j##*/}
+
+                    if ! grep $vendor/$theme dev/tools/grunt/configs/themes.js &> /dev/null ;
+                    then
+                        head -n -1 dev/tools/grunt/configs/themes.js >> themes.js.tmp
+                        sed -i '${s/$/,/}' themes.js.tmp
+                        themeName=$(echo "$theme" | sed -e "s/^theme-frontend-//")
+                        printf "\t"${themeName//-}": {\n\t\tarea: 'frontend',\n\t\tname: '$vendor/$theme',\n\t\tlocale: 'pt_BR',\n\t\tfiles: [\n\t\t\t'css/styles-m',\n\t\t\t'css/styles-l'\n\t\t],\n\t\tdsl: 'less'\n\t}" >> $theme-theme.tmp
+                        cat $theme-theme.tmp >> themes.js.tmp
+                        rm $theme-theme.tmp
+                        sed -i '${s/$/\n/}' themes.js.tmp
+                        tail -1 dev/tools/grunt/configs/themes.js >> themes.js.tmp
+                        mv themes.js.tmp dev/tools/grunt/configs/themes.js
+                        echo "Grunt configuration for theme $vendor/$theme created. To check it, run grunt exec:${themeName//-}"
+                    else
+                        echo "The theme $vendor/$theme is already configured."
+                    fi
+                done
+            fi
+        done
+	else
+		echo "This is not a Magento 2 Repository or it is not installed yet. Run composer install to install it."
+	fi
+}
+
