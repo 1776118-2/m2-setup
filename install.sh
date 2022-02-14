@@ -8,10 +8,7 @@ clear='\033[0m'
 
 # Installation options
 options(){
-    echo -e "${blue}        
-        (1) Simple (Install all applications)
-        (2) Advanced (Select specific applications to install)
-        (3) Exit${clear}"
+    echo -e "${blue}(1) Simple (Install all applications) \n (2) Advanced (Select specific applications to install) \n (3) Exit${clear}"
     read answer
     case "$answer" in
         1)
@@ -55,24 +52,23 @@ simple(){
 
 # Advanced installation
 advanced(){
-    echo -e "${yellow}
-    What do you want to install?
-        (0) All    
-        (1) Apache 2
-        (2) PHP 7.3 and 7.4
-        (3) MySQL
-        (4) ElasticSearch
-        (5) NodeJS and Grunt
-        (6) Composer
-        (7) DBeaver
-        (8) Insomnia
-        (9) PHPStorm
-        (10) VSCode
-        (11) Theme
-        (12) ZSH and Oh-My+Zsh
-        (13) Magento-Cloud
-        (14) Google Chrome
-        (15) Exit${clear}"
+    echo -e "${yellow}What do you want to install?
+    (0) All    
+    (1) Apache 2
+    (2) PHP 7.3 and 7.4
+    (3) MySQL
+    (4) ElasticSearch
+    (5) NodeJS and Grunt
+    (6) Composer
+    (7) DBeaver
+    (8) Insomnia
+    (9) PHPStorm
+    (10) VSCode
+    (11) Theme
+    (12) ZSH and Oh-My+Zsh
+    (13) Magento-Cloud
+    (14) Google Chrome
+    (15) Exit${clear}"
     read answer
     case "$answer" in
         0)
