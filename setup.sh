@@ -44,7 +44,7 @@ set_permissions(){
     then
     else
         echo $USER 'ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers
-    fi
+    if
     echo "APT::Get::Assume-Yes "true";" >> 98forceyes
     sudo mv 98forceyes /etc/apt/apt.conf.d/.
 }
